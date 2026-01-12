@@ -1,15 +1,27 @@
 [project]
 name = "checkpl"
 version = "0.1.0"
-description = "Add your description here"
+description = "Ergonomic inline validation for Polars DataFrames with pipeable assertions and user-friendly wrappers around native Polars boolean expressions."
 readme = "README.md"
 authors = [
     { name = "ran li", email = "ranli2011@gmail.com" }
 ]
+keywords = ["polars", "validation", "data-quality", "dataframe"]
 requires-python = ">=3.12"
 dependencies = [
     "polars>=1.37.0",
 ]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering",
+]
+
+[project.urls]
+Homepage = "https://github.com/ran-codes/checkpl"
+Repository = "https://github.com/ran-codes/checkpl"
 
 [build-system]
 requires = ["uv_build>=0.8.22,<0.9.0"]
