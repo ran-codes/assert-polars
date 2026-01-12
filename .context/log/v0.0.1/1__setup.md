@@ -117,10 +117,11 @@ src/checkpl/
 ├── __init__.py           # main exports
 ├── errors.py             # CheckError exception
 ├── core/
-│   ├── __init__.py       # exports verify
+│   ├── __init__.py       # re-exports core functions
+│   ├── hello.py          # hello() test function (temporary)
 │   └── verify.py         # verify() function
 └── predicates/
-    ├── __init__.py       # exports is_uniq, not_null
+    ├── __init__.py       # re-exports predicates
     ├── is_uniq.py        # is_uniq() function
     └── not_null.py       # not_null() function
 ```
@@ -144,6 +145,20 @@ mkdir src/checkpl/predicates
 **Create `src/checkpl/core/__init__.py`:**
 ```python
 """Core validation functions."""
+
+from checkpl.core.hello import hello
+
+__all__ = ["hello"]
+```
+
+**Create `src/checkpl/core/hello.py`:** (temporary test function)
+```python
+"""Temporary test function to verify imports work."""
+
+
+def hello() -> str:
+    """Return a greeting from checkpl."""
+    return "Hello from checkpl!"
 ```
 
 **Create `src/checkpl/core/verify.py`:**
@@ -154,6 +169,9 @@ mkdir src/checkpl/predicates
 **Create `src/checkpl/predicates/__init__.py`:**
 ```python
 """Predicate functions for column-level checks."""
+
+# Will export is_uniq, not_null once implemented
+__all__: list[str] = []
 ```
 
 **Create `src/checkpl/predicates/is_uniq.py`:**
@@ -185,16 +203,38 @@ Replace the contents with:
 ```python
 """checkpl - Simple inline data validation for Polars."""
 
+from checkpl.core import hello
+
 __version__ = "0.0.1"
+__all__ = ["hello", "__version__"]
 ```
 
-(We'll add exports later once we implement the functions)
+**How the import chain works:**
+```
+User imports:        from checkpl import hello
+                              ↓
+__init__.py:         from checkpl.core import hello
+                              ↓
+core/__init__.py:    from checkpl.core.hello import hello
+                              ↓
+core/hello.py:       def hello(): ...
+```
 
 ---
 
 ## 1.7 Verify Setup Works
 
-**Check that Python runs:**
+**Check that hello() works (tests the full import chain):**
+```bash
+uv run python -c "from checkpl import hello; print(hello())"
+```
+
+Expected output:
+```
+Hello from checkpl!
+```
+
+**Check that version works:**
 ```bash
 uv run python -c "import checkpl; print(checkpl.__version__)"
 ```
@@ -232,15 +272,16 @@ Expected output: no errors (or empty output)
 - [ ] Created `src/checkpl/core/` directory
 - [ ] Created `src/checkpl/predicates/` directory
 - [ ] Created empty `src/checkpl/errors.py`
-- [ ] Created empty `src/checkpl/core/__init__.py`
+- [ ] Created `src/checkpl/core/__init__.py` with hello export
+- [ ] Created `src/checkpl/core/hello.py` with hello function
 - [ ] Created empty `src/checkpl/core/verify.py`
-- [ ] Created empty `src/checkpl/predicates/__init__.py`
+- [ ] Created `src/checkpl/predicates/__init__.py` with empty __all__
 - [ ] Created empty `src/checkpl/predicates/is_uniq.py`
 - [ ] Created empty `src/checkpl/predicates/not_null.py`
 - [ ] Created empty `tests/__init__.py`
 - [ ] Created empty `tests/test_checks.py`
-- [ ] Updated `src/checkpl/__init__.py` with version
-- [ ] Verified `uv run python -c "import checkpl"` works
+- [ ] Updated `src/checkpl/__init__.py` with version and hello export
+- [ ] Verified `uv run python -c "from checkpl import hello; print(hello())"` works
 - [ ] Verified `uv run pytest` runs without errors
 
 ---
