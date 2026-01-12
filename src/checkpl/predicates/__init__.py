@@ -1,4 +1,5 @@
 """Predicate functions for column-level checks."""
 
-# Will export is_uniq, not_null once implemented
-__all__: list[str] = []
+from checkpl.predicates.is_uniq import is_uniq
+
+__all__ = ["is_uniq"]
